@@ -2,6 +2,7 @@
 extern crate rouille;
 
 use std::io;
+use std::process::{Command};
 
 fn main() {
     // This example demonstrates how to handle HTML forms.
@@ -35,6 +36,15 @@ fn main() {
                     // We just print what was received on stdout. Of course in a real application
                     // you probably want to process the data, eg. store it in a database. 
                     println!("Received data: {:?}", data);
+
+                    if cfg!(target_os = "windows") {
+                        println!("POST ON WINDOWS");
+                    } else {
+                        Command::new("sh")
+                            .args(&["sudo", "/home/ftpuser/vid_downloads/download_files.sh"])
+                            .output()
+                            .expect("Should have downloaded files!");
+                    }
 
                     rouille::Response::html("Success! <a href=\"/\">Go back</a>.")
                 },
